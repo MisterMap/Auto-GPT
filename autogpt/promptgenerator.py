@@ -22,11 +22,13 @@ class PromptGenerator:
             "thoughts": {
                 "text": "thought",
                 "reasoning": "reasoning",
-                "plan": "- short bulleted\n- list that conveys\n- long-term plan",
+                "plan": "- short bulleted\n- list that informal\n- description of commands\n plan should reflect commands",
                 "criticism": "constructive self-criticism",
                 "speak": "thoughts summary to say to user",
             },
-            "command": {"name": "command name", "args": {"arg name": "value"}},
+            "commands": [{"name": "the most priority command name", "args": {"arg name": "value"}},
+             {"name": "the second priority command name", "args": {"arg name": "value"}},
+             {"name": "other long term tasks that conveys the plan", "args": {"arg name": "value"}}],
         }
 
     def add_constraint(self, constraint: str) -> None:

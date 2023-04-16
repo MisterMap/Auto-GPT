@@ -47,6 +47,7 @@ class Agent:
         loop_count = 0
         command_name = None
         arguments = None
+        commands = []
         while True:
             # Discontinue if continuous limit is reached
             loop_count += 1
@@ -61,9 +62,10 @@ class Agent:
                 break
 
             # Send message to AI, get response
+            prompt = self.prompt + "\nYour previous commands were {commands}. Keep these commands in command list"
             with Spinner("Thinking... "):
                 assistant_reply = chat_with_ai(
-                    self.prompt,
+                    prompt,
                     self.user_input,
                     self.full_message_history,
                     self.memory,
@@ -75,9 +77,11 @@ class Agent:
 
             # Get command name and arguments
             try:
-                command_name, arguments = get_command(
+                commands = get_command(
                     attempt_to_fix_json_by_finding_outermost_brackets(assistant_reply)
                 )
+                # print("Commands plan: ", str(commands))
+                command_name, arguments = commands.pop(0)
                 if cfg.speak_mode:
                     say_text(f"I want to execute {command_name}")
             except Exception as e:

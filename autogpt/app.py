@@ -63,26 +63,33 @@ def get_command(response: str):
     """
     try:
         response_json = fix_and_parse_json(response)
+        print(response)
 
-        if "command" not in response_json:
-            return "Error:", "Missing 'command' object in JSON"
+        if "commands" not in response_json:
+            return "Error:", "Missing 'commands' object in JSON"
 
         if not isinstance(response_json, dict):
             return "Error:", f"'response_json' object is not dictionary {response_json}"
 
-        command = response_json["command"]
-        if not isinstance(command, dict):
-            return "Error:", "'command' object is not a dictionary"
+        commands = response_json["commands"]
+        if not isinstance(commands, list):
+            return "Error:", "'commands' object is not a list"
+        if len(commands) == 0:
+            return "Error:", "'commands' object len is zero"
+        result_commands = []
+        for command in commands:
+            if not isinstance(command, dict):
+                return "Error:", "'command' object is not a dict"
+            if "name" not in command:
+                return "Error:", "Missing 'name' field in 'command' object"
 
-        if "name" not in command:
-            return "Error:", "Missing 'name' field in 'command' object"
+            command_name = command["name"]
 
-        command_name = command["name"]
+            # Use an empty dictionary if 'args' field is not present in 'command' object
+            arguments = command.get("args", {})
+            result_commands.append((command_name, arguments))
 
-        # Use an empty dictionary if 'args' field is not present in 'command' object
-        arguments = command.get("args", {})
-
-        return command_name, arguments
+        return result_commands
     except json.decoder.JSONDecodeError:
         return "Error:", "Invalid JSON"
     # All other errors, return "Error: + error message"

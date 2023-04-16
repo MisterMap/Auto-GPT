@@ -31,12 +31,18 @@ def get_prompt() -> str:
         " immediately save important information to files."
     )
     prompt_generator.add_constraint(
+        "Generate full plan as list of commands where the first command is the highest priority."
+    )
+    prompt_generator.add_constraint(
+        "Use the privious plan as baseline. Do not change it a lot. Add new tasks and reprioretizes them"
+    )
+    prompt_generator.add_constraint(
         "If you are unsure how you previously did something or want to recall past"
         " events, thinking about similar events will help you remember."
     )
     prompt_generator.add_constraint("No user assistance")
     prompt_generator.add_constraint(
-        'Exclusively use the commands listed in double quotes e.g. "command name"'
+        'Exclusively use the commands listed in double quotes e.g. "command name" for genereting list of commands'
     )
 
     # Define the command list
